@@ -3,7 +3,7 @@
     <CLASSES />
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../../fresco/demos/common/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../fresco/demos/common/src/main/java" />
     </SOURCES>
   </library>
 </component>

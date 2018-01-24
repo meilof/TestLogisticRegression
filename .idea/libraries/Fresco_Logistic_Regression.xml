@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Fresco-Logistic-Regression">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../Fresco-Logistic-Regression/out/production/fresco-logistic-regression" />
+      <root url="file://$PROJECT_DIR$/../Fresco-Logistic-Regression/out/production/fresco-logistic-regression" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../../Fresco-Logistic-Regression/src" />
+      <root url="file://$PROJECT_DIR$/../Fresco-Logistic-Regression/src" />
     </SOURCES>
   </library>
 </component>
