@@ -1,0 +1,544 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Programming MPC applications with FRESCO using Kotlin and Coroutines
+\end_layout
+
+\begin_layout Section
+Fresco-Logistic-Regression
+\end_layout
+
+\begin_layout Standard
+Fresco-Logistic-Regression
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://github.com/Charterhouse/Fresco-Logistic-Regression, by Mark Spanbroek
+ and Stefan van den Oord
+\end_layout
+
+\end_inset
+
+ introduces an 
+\emph on
+Expression
+\emph default
+ class and subclasses that enable to easily specify FRESCO computations.
+ The idea is that an 
+\emph on
+Expression
+\emph default
+ captures a computation to be performed by FRESCO; by running 
+\emph on
+e.build()
+\emph default
+, this expression is turned into a FRESCO 
+\emph on
+Computation
+\emph default
+ instance that can be executed by FRESCO.
+\end_layout
+
+\begin_layout Standard
+Fresco-Logistic-Regression also includes a 
+\emph on
+DummyEvaluation
+\emph default
+ module providing an 
+\emph on
+evaluate 
+\emph default
+function that directly evaluates an 
+\emph on
+Expression
+\emph default
+ using FRESCO's dummy evaluation system.
+ This does not perform an actual multi-party computation: instead, it performs
+ the computation locally on one PC.
+\end_layout
+
+\begin_layout Standard
+However, the above approach does not allow intermediate results in a computation
+ to be opened.
+ For instance, in logistic regression, the resulting model (a vector with
+ one coefficient for each attribute) is determined in an iterative proceess.
+ For efficiency reasons, one would like to open the current estimate of
+ the resulting model after each iteration, so that it can be used in the
+ plain in the next iteration.
+ As a workaround, the code in the proof-of-concept that builds up the 
+\emph on
+Expression
+\emph default
+ instance for the logistic regression computation does the following:
+\end_layout
+
+\begin_layout LyX-Code
+val openBeta = evaluate(beta)
+\end_layout
+
+\begin_layout Standard
+That is, the function contains a recursive call to the 
+\emph on
+evaluate 
+\emph default
+dummy evaluation -- but this does not actually perform a multi-party computation.
+ Instead, what we would like to happen here is that the line above temporarily
+ suspends the function that builds up the Expression to execute the MPC
+ protocol corresponding to the 
+\emph on
+beta
+\emph default
+ expression.
+ This is enabled by the use of generators.
+\end_layout
+
+\begin_layout Section
+Fresco-Logistic-Regression & Generators
+\end_layout
+
+\begin_layout Standard
+Generators, for instance available in Python, 
+\begin_inset Quotes eld
+\end_inset
+
+allow you to declare a function that behaves like an iterator, i.e.
+ it can be used in a for loop
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+https://wiki.python.org/moin/Generators
+\end_layout
+
+\end_inset
+
+.
+ Kotlin does not support generators directly but it supports a more general
+ concept of 
+\begin_inset Quotes eld
+\end_inset
+
+coroutines
+\begin_inset Quotes erd
+\end_inset
+
+ that can be used to support them
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://github.com/Kotlin/kotlin-coroutines/tree/master/examples/generator
+\end_layout
+
+\end_inset
+
+.
+ For instance, consider one of the examples there:
+\end_layout
+
+\begin_layout LyX-Code
+// Simple example
+\end_layout
+
+\begin_layout LyX-Code
+fun idMaker() = generate<Int, Unit> {
+\end_layout
+
+\begin_layout LyX-Code
+    var index = 0
+\end_layout
+
+\begin_layout LyX-Code
+    while (index < 3)
+\end_layout
+
+\begin_layout LyX-Code
+        yield(index++)
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+fun main(args: Array<String>) {
+\end_layout
+
+\begin_layout LyX-Code
+    val gen = idMaker()
+\end_layout
+
+\begin_layout LyX-Code
+    println(gen.next(Unit)) // 0
+\end_layout
+
+\begin_layout LyX-Code
+    println(gen.next(Unit)) // 1
+\end_layout
+
+\begin_layout LyX-Code
+    println(gen.next(Unit)) // 2
+\end_layout
+
+\begin_layout LyX-Code
+    println(gen.next(Unit)) // null
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+In this example, 
+\emph on
+idMaker
+\emph default
+ is a generator that repeatedly 
+\begin_inset Quotes eld
+\end_inset
+
+yields
+\begin_inset Quotes erd
+\end_inset
+
+ values (in this case, 0, 1, and 2) that can be obtained by the caller (in
+ this case 
+\emph on
+main
+\emph default
+) by calling the function once and then repeatedly calling 
+\emph on
+next
+\emph default
+ to get the next yielded value.
+ In this example, data only travels from the generator to the caller, but
+ it is also possible to have data travel from the caller to the generator:
+ the argument that the caller gives to 
+\emph on
+next
+\emph default
+ would be the return value of 
+\emph on
+yield
+\emph default
+ in the generator.
+\end_layout
+
+\begin_layout Standard
+Intuitively, generators allow us to specify functions that can be temporarily
+ suspended and then restarted later.
+ This gives us a way to deal with the problem of opening intermediate results
+ in a multi-party computation.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+This idea was already known for the Twisted deferreds as 
+\begin_inset Quotes eld
+\end_inset
+
+inline callbacks
+\begin_inset Quotes erd
+\end_inset
+
+ and, as per my suggestion, has also made its way into the Python-based
+ VIFF framework for multiparty computation that is used at Eindhoven University
+ of Technology.
+\end_layout
+
+\end_inset
+
+ The idea is that we turn the function that builds up the 
+\emph on
+Expression
+\emph default
+ for the multi-party computation into a generator.
+ At the point where it needs the value of an intermediate result, it can
+ do something like:
+\end_layout
+
+\begin_layout LyX-Code
+val openBeta = yield(beta)
+\end_layout
+
+\begin_layout Standard
+This would suspend the generator, giving the caller an 
+\emph on
+Expression
+\emph default
+ that the generator would like to see evaluated.
+ The caller can evaluate this 
+\emph on
+Expression
+\emph default
+, and provide it to the generator by providing it as the argument to 
+\emph on
+next
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+This is exactly what happens in the Fresco-Logistic-Regression fork
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://github.com/meilof/Fresco-Logistic-Regression
+\end_layout
+
+\end_inset
+
+.
+ The function to build the logistic regression model is turned into a coroutine
+ that yields several times to get the plaintext value of the current estimate
+ for the model; and it finally yields to produce the eventual model (a coroutine
+ cannot return values so this value needs to be yielded as well).
+ Globally, it is structured as follows:
+\end_layout
+
+\begin_layout LyX-Code
+    fun fitLogisticModelCoroutine(...) = generate<Any, Any> {
+\end_layout
+
+\begin_layout LyX-Code
+        // ...
+ first estimate of beta ...
+\end_layout
+
+\begin_layout LyX-Code
+        for (i in 0 until numberOfIterations) {
+\end_layout
+
+\begin_layout LyX-Code
+            val openBeta = yield(beta) as plain.Vector
+\end_layout
+
+\begin_layout LyX-Code
+            // ...
+ update estimate of beta
+\end_layout
+
+\begin_layout LyX-Code
+        }
+\end_layout
+
+\begin_layout LyX-Code
+        yield(beta)
+\end_layout
+
+\begin_layout LyX-Code
+    }
+\end_layout
+
+\begin_layout Standard
+To enable this to work, some other small technical changes were needed in
+ Fresco-Logistic-Regression that are also included in this fork.
+\end_layout
+
+\begin_layout Section
+Calling Evaluator generators
+\end_layout
+
+\begin_layout Standard
+Given a generator producing 
+\emph on
+Expression
+\emph default
+s above, we need code that 
+\begin_inset Quotes eld
+\end_inset
+
+executes
+\begin_inset Quotes erd
+\end_inset
+
+ the generator by repeatedly:
+\end_layout
+
+\begin_layout Enumerate
+calling the generator to get 
+\emph on
+Expression
+\emph default
+s;
+\end_layout
+
+\begin_layout Enumerate
+calling 
+\emph on
+build()
+\emph default
+ on such an
+\emph on
+ Expression
+\emph default
+ to get a FRESCO 
+\emph on
+Computation
+\emph default
+ instance;
+\end_layout
+
+\begin_layout Enumerate
+amending this 
+\emph on
+Computation
+\emph default
+ instance so that the value is not only computed, but also opened;
+\end_layout
+
+\begin_layout Enumerate
+passing the anended instance on to the FRESCO engine for execution;
+\end_layout
+
+\begin_layout Enumerate
+and using the result (i.e., the opened value corresponding to the yielded
+ 
+\emph on
+Expression
+\emph default
+) in the next call to the generator (step 1).
+\end_layout
+
+\begin_layout Standard
+This is exactly what is demonstrated in the TestLogisticRegression project
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://github.com/meilof/TestLogisticRegression
+\end_layout
+
+\end_inset
+
+.
+ Specifically, the 
+\emph on
+CoroutineRunner
+\emph default
+ class in 
+\emph on
+Test.java
+\emph default
+ does this, for the case that the 
+\emph on
+Expression
+\emph default
+ yielded by the generator is a vector, making use of a 
+\emph on
+EvalOpenVectorApp
+\emph default
+ that opens such a vector to its plaintext values.
+\end_layout
+
+\begin_layout Standard
+The above is sufficient to run the logistic regression example (the 
+\emph on
+Test 
+\emph default
+class demonstrates this by running logistic regression on a small example),
+ but to make this code more generally useful, 
+\emph on
+CoroutineRunner
+\emph default
+ should be generalised to provide a matching opening protocol for any type
+ of 
+\emph on
+Expression
+\emph default
+ that the framework in Fresco-Logistic-Regresion may return.
+ Better yet, Fresco-Logistic-Regression 
+\emph on
+Expression
+\emph default
+s should themselves have an 
+\emph on
+open()
+\emph default
+ function that provides a protocol to open them, such that the 
+\emph on
+CoroutineRunner
+\emph default
+ can be made much simpler.
+\end_layout
+
+\end_body
+\end_document
