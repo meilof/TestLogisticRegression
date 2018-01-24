@@ -1,15 +1,14 @@
 import java.math.BigInteger;
 
-import dk.alexandra.fresco.framework.Reporter;
 import dk.alexandra.fresco.framework.sce.SCEFactory;
 import dk.alexandra.fresco.framework.sce.SecureComputationEngine;
 import dk.alexandra.fresco.framework.sce.resources.ResourcePool;
 import dk.alexandra.fresco.framework.builder.ProtocolBuilderNumeric;
+import dk.alexandra.fresco.framework.sce.evaluator.SequentialEvaluator;
 import fresco.LogisticRegression;
 import fresco.dsl.DummyApplication;
-import fresco.dsl.DummyProtocolSuiteConfiguration;
+import fresco.dsl.DummyProtocolSuite;
 import fresco.dsl.DummyResourcePool;
-import fresco.dsl.DummySCEConfiguration;
 import fresco.dsl.KnownInt;
 import plain.MatrixKt;
 import plain.MatrixType;
@@ -18,11 +17,11 @@ import plain.Vector;
 public class TestLogisticRegression {
 	
 	public static void main(String[] args) {
-		//Reporter.setLevel(WARNING);
-    
-		DummySCEConfiguration configuration = new DummySCEConfiguration();
-		DummyProtocolSuiteConfiguration suite = new DummyProtocolSuiteConfiguration();
-		SecureComputationEngine<ResourcePool,ProtocolBuilderNumeric.SequentialNumericBuilder> engine = SCEFactory.getSCEFromConfiguration(configuration, suite);
+
+		//DummySCEConfiguration configuration = new DummySCEConfiguration();
+		DummyProtocolSuite suite = new DummyProtocolSuite();
+        SequentialEvaluator evaluator = new SequentialEvaluator<ResourcePool>();
+		SecureComputationEngine<ResourcePool,ProtocolBuilderNumeric.SequentialNumericBuilder> engine = SCEFactory.getSCEFromConfiguration(suite, evaluator);
 		
         double intercept = 1.65707;
         double beta_hp = 0.00968555;

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="fresco">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../fresco/core/target/classes" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../fresco/core/src/main/java" />
+    </SOURCES>
+  </library>
+</component>

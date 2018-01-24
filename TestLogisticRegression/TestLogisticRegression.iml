@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$APPLICATION_HOME_DIR$/plugins/Kotlin/lib/kotlin-runtime.jar!/" />
+    <libelement value="file://C:/logreg/fresco/core/target/classes" />
+    <libelement value="file://C:/logreg/fresco/demos/common/target/classes" />
+    <libelement value="file://C:/logreg/external-classes/commons-cli-1.3.1.jar" />
+    <libelement value="file://C:/logreg/external-classes/slf4j-simple-1.7.5.jar" />
+    <libelement value="file://C:/logreg/external-classes/slf4j-api-1.7.5.jar" />
+    <libelement value="file://C:/logreg/external-classes/Scapi-2.4.jar" />
+    <libelement value="file://C:/logreg/external-classes/commons-exec-1.2.jar" />
+    <libelement value="file://C:/logreg/fresco/suite/spdz/target/classes" />
+    <libelement value="file://C:/logreg/Fresco-Logistic-Regression/out/production/fresco-logistic-regression" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="module-library">
+      <library name="kotlin-runtime.jar">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/plugins/Kotlin/lib/kotlin-runtime.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="fresco" level="project" />
+    <orderEntry type="library" name="Fresco-Logistic-Regression" level="project" />
+    <orderEntry type="module-library">
+      <library name="spdz">
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../fresco/suite/spdz/src/main/java" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="fresco-demos-class">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-cli-1.3.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/slf4j-simple-1.7.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/slf4j-api-1.7.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../fresco/lib/scapi/scapi/2.4.0/scapi-2.4.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-exec-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>

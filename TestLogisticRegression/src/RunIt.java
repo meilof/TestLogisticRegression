@@ -1,5 +1,3 @@
-import java.math.BigInteger;
-
 import fresco.LogisticRegression;
 import fresco.dsl.DummyEvaluationKt;
 import plain.MatrixKt;
